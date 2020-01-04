@@ -1,5 +1,5 @@
 import {Application} from 'express'
-import {UserController} from './Controllers'
+import {UserController, detectFace} from './Controllers'
 
 export class Routes{
 
@@ -7,6 +7,8 @@ export class Routes{
         
         app.get('/', UserController.testRoute)
         app.post('/signup', UserController.registerUser)
+
+        app.get('/test-detect', detectFace)
         
     }
 }
