@@ -1,27 +1,38 @@
 import {Request, Response} from 'express'
-import {join} from 'path'
-import '@tensorflow/tfjs-node'
-import * as faceApi from 'face-api.js'
 
-import {canvas, faceDetectionNet, faceDetectionOptions} from '../../common'
+import {ImageNotAvailableError} from '../../common/exceptions.common'
+import { FaceDetectRepository } from '../../Repository'
 
 const detectFace = async (req: Request, res: Response) => {
     try{
+        if(!(req.files && req.files.image)) throw new ImageNotAvailableError()
 
-        await faceApi.nets.ssdMobilenetv1.loadFromDisk(join(__dirname, '../../../models'))
-
-        const image = await canvas.loadImage(join(__dirname, '../../../imgs/test.jpeg'))
-        const detections = await faceApi.detectAllFaces(image, faceDetectionOptions)
-        
+        const faceDetectRepo = new FaceDetectRepository()
+        const detections = await faceDetectRepo.detectFace(req.files.image['data'])
         res.send(detections)
     }
     catch(e){
         console.log(e)
-        res.status(404).send()
+        res.status(e && e.code && e.code || 404).send()
     }
+}
 
+const detectFaceWithImg = async (req: Request, res: Response) => {
+    try{
+        if(!(req.files && req.files.image)) throw new ImageNotAvailableError()
+
+        const faceDetectRepo = new FaceDetectRepository()
+        const processedImg = await faceDetectRepo.detectFace(req.files.image['data'], true)
+        res.contentType('image/png');
+        res.send(processedImg)
+    }
+    catch(e){
+        console.log(e)
+        res.status(e && e.code && e.code || 404).send()
+    }
 }
 
 export {
-    detectFace
+    detectFace,
+    detectFaceWithImg
 }
