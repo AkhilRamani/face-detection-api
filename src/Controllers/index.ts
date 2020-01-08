@@ -1,5 +1,5 @@
-import * as UserController from './User/User.Controllers'
-import * as faceDetectController from './FaceDetact/faceDetact.controller'
+import * as UserController from './user/user.controllers'
+import * as faceDetectController from './faceDetact/faceDetact.controller'
 
 export {
     UserController,

@@ -1,5 +1,6 @@
 import {Application, Router} from 'express'
 import {UserController, faceDetectController} from './Controllers'
+import { preQueryCheckMiddleware } from './middleware/middleware'
 
 export class Routes{
 
@@ -11,7 +12,7 @@ export class Routes{
         app.get('/', UserController.testRoute)
         app.post('/signup', UserController.registerUser)
 
-        apiV1Router.post('/detect', faceDetectController.detectFace)
-        apiV1Router.post('/detect/res=img', faceDetectController.detectFaceWithImg)
+        apiV1Router.post('/detect', preQueryCheckMiddleware, faceDetectController.detectFace)
+        apiV1Router.post('/detect/landmark', preQueryCheckMiddleware,faceDetectController.detectLandmark)
     }
 }

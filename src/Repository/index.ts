@@ -1,5 +1,5 @@
-import {UserRepository} from './User/User.Repository'
-import {FaceDetectRepository} from './FaceDetect/faceDetect.repository'
+import {UserRepository} from './user/user.repository'
+import {FaceDetectRepository} from './faceDetect/faceDetect.repository'
 
 export {
     UserRepository,

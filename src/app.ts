@@ -20,6 +20,7 @@ app.use(bodyParser.json())
 app.use(expressFileUpload())
 routesPrv.routes(app);
 
+//TODO: is it efficient?
 (async () => await faceApi.nets.ssdMobilenetv1.loadFromDisk(join(__dirname, '../models')))()
 
 mongoose.Promise = global.Promise
