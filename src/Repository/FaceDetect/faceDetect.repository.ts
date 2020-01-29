@@ -38,4 +38,49 @@ export class FaceDetectRepository{
             return {buffer: outputCanvas.toBuffer(mimetype), type: mimetype}
         }
     }
+
+    async detectAgeGender(inputImage: Buffer, mimetype: string = 'image/jpeg', withImage: boolean = false){
+        await faceApi.nets.ageGenderNet.loadFromDisk(join(__dirname, '../../../models'))
+
+        const image = await canvas.loadImage(inputImage)
+        const results = await faceApi.detectAllFaces(image, faceDetectionOptions).withAgeAndGender()
+
+        if(!withImage){
+            return results
+        }
+        else{
+            const outputCanvas = faceApi.createCanvasFromMedia(image) as any
+            faceApi.draw.drawDetections(outputCanvas, results.map(res => res.detection))
+            results.forEach(result => {
+                const {age, gender, genderProbability} = result
+                new faceApi.draw.DrawTextField(
+                    [
+                        `${faceApi.utils.round(age, 0)} years`,
+                        `${gender} (${faceApi.utils.round(genderProbability)})`
+                    ],
+                    result.detection.box.bottomLeft
+                ).draw(outputCanvas)
+            })
+
+            return {buffer: outputCanvas.toBuffer(mimetype), type: mimetype}
+        }
+    }
+
+    async detectExpresion(inputImage: Buffer, mimetype: string = 'image/jpeg', withImage: boolean = false){
+        await faceApi.nets.faceExpressionNet.loadFromDisk(join(__dirname, '../../../models'))
+
+        const image = await canvas.loadImage(inputImage)
+        const results = await faceApi.detectAllFaces(image, faceDetectionOptions).withFaceExpressions()
+
+        if(!withImage){
+            return results
+        }
+        else{
+            const outputCanvas = faceApi.createCanvasFromMedia(image) as any
+            faceApi.draw.drawDetections(outputCanvas, results.map(res => res.detection))
+            faceApi.draw.drawFaceExpressions(outputCanvas, results)
+            return {buffer: outputCanvas.toBuffer(mimetype), type: mimetype}
+        }
+    }
+
 }

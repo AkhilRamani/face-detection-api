@@ -13,6 +13,8 @@ export class Routes{
         app.post('/signup', UserController.registerUser)
 
         apiV1Router.post('/detect', preQueryCheckMiddleware, faceDetectController.detectFace)
-        apiV1Router.post('/detect/landmark', preQueryCheckMiddleware,faceDetectController.detectLandmark)
+        apiV1Router.post('/detect/landmark', preQueryCheckMiddleware, faceDetectController.detectLandmark)
+        apiV1Router.post('/detect/age-gender', preQueryCheckMiddleware, faceDetectController.detectAgeGender)
+        apiV1Router.post('/detect/expression', preQueryCheckMiddleware, faceDetectController.detectExpression)
     }
 }
